@@ -1,0 +1,7 @@
+declare module '@iconscout/react-unicons'
+declare module '@iconscout/react-unicons-solid'
+declare module 'react-custom-scrollbars'
+declare module 'react-multi-carousel'
+declare module 'apexcharts'
+declare module 'react-apexcharts'
+declare module 'axios'
