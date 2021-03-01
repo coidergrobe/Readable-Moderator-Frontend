@@ -82,6 +82,7 @@ module.exports = {
 			textColor: ['visited'],
 			backgroundColor: ['active'],
 			borderRadius: ['last', 'first'],
+			width: ['first'],
 		},
 	},
 	plugins: [],

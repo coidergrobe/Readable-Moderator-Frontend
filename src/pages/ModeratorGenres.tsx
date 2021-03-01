@@ -39,9 +39,7 @@ const ModeratorGenres = () => {
 	const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost)
 	const thead = ['ID', 'Name', 'Total books', '']
 
-	const tbodyValue = ['id', 'title', 'body']
-
-	const tbody = { data: currentPosts, value: tbodyValue }
+	const tbodyKey = ['id', 'title', 'body']
 
 	const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 	const prevPage = (pageNumber: number) => setCurrentPage(pageNumber - 1)
@@ -50,6 +48,8 @@ const ModeratorGenres = () => {
 	const handleCreateGenrePopup = () => {
 		setIsCreateGenreModalOpen(true)
 	}
+
+	console.log(currentPage)
 
 	return (
 		<>
@@ -101,7 +101,8 @@ const ModeratorGenres = () => {
 							<div>
 								<PaginationTable
 									thead={thead}
-									tbody={tbody}
+									tbodyKey={tbodyKey}
+									tbodyData={currentPosts}
 									text='Details'
 									button
 									postsPerPage={postsPerPage}
