@@ -18,8 +18,6 @@ interface Action {
 }
 
 const localStorageMiddleware = () => (next: any) => (action: Action) => {
-	console.log(222222, next)
-
 	switch (action.type) {
 		case MIDDLE_DISPATCH_ACTION_CONSTANTS.REGISTER_SUCCESS:
 		case MIDDLE_DISPATCH_ACTION_CONSTANTS.LOGIN_SUCCESS: {

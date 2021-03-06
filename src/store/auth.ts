@@ -8,14 +8,24 @@ interface InitState {
 	[state: string]: any
 }
 
-type AuthState = CaseReducer<InitState, PayloadAction<Payload>>
+type AuthReducer = CaseReducer<InitState, PayloadAction<Payload>>
+
+const loadUser: AuthReducer = (state, action) => {
+	return {
+		user: {
+			...action.payload,
+		},
+	}
+}
 
 const authSlice = createSlice({
 	name: 'auth',
 	initialState: {},
-	reducers: {},
+	reducers: {
+		loadUser,
+	},
 })
 
-export const actions = authSlice.actions
+export const authReducerActions = authSlice.actions
 
 export default authSlice.reducer

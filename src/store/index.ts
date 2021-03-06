@@ -5,7 +5,7 @@ import { createLogger } from 'redux-logger'
 
 import middleware from '../configs/middleware'
 // reducer
-import authReducer from './auth'
+import authReducer, { authReducerActions } from './auth'
 import counterReducer from './counter'
 import todosReducer from './todos'
 
@@ -46,3 +46,7 @@ export type AppDispatch = typeof store.dispatch
 export type RootState = ReturnType<typeof store.getState>
 
 export default store
+
+export const reducerActions = {
+	authReducerActions,
+}

@@ -21,7 +21,6 @@ const routes = [
 		exact: true,
 		auth: false,
 	},
-
 	{
 		path: '/moderator/overview',
 		component: Overview,
@@ -46,6 +45,10 @@ const routes = [
 		path: '/moderator/books/create',
 		component: ModeratorBooksCreate,
 		exact: true,
+	},
+	{
+		path: '/',
+		redirect: '/moderator/overview',
 	},
 ]
 

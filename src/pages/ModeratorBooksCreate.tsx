@@ -4,12 +4,10 @@ import SearchBox from '../components/SearchBox'
 import Input from '../components/Input'
 import HorizontalCategory from '../components/HorizontalCategory'
 import { Scrollbars } from 'react-custom-scrollbars'
-import TotalData from '../components/TotalData'
 
 // Icons
 import { UilBell } from '@iconscout/react-unicons'
 import { UilEllipsisV } from '@iconscout/react-unicons'
-import { UilBooks } from '@iconscout/react-unicons'
 
 // Formik
 import { useFormik } from 'formik'
