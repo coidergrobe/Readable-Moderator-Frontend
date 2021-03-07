@@ -120,7 +120,9 @@ const ModeratorGenres = () => {
 				</div>
 			</ModeratorLayout>
 			{isCreateGenreModalOpen && (
-				<Modal onClick={() => setIsCreateGenreModalOpen(false)}>
+				<Modal
+					onClick={() => setIsCreateGenreModalOpen(false)}
+					style={{ width: '300px' }}>
 					{<CreateGenre />}
 				</Modal>
 			)}

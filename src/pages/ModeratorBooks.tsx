@@ -8,6 +8,7 @@ import TotalData from '../components/TotalData'
 import React, { useState, useEffect } from 'react'
 import PaginationTable from '../components/PaginationTable'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 const ModeratorBooks = () => {
 	const [posts, setPosts] = useState([])
@@ -81,7 +82,9 @@ const ModeratorBooks = () => {
 									/>
 								</div>
 								<div className='text-primary cursor-pointer hover:text-dark-alt'>
-									<UilPlusCircle size='40px' />
+									<Link to='/moderator/books/create'>
+										<UilPlusCircle size='40px' />
+									</Link>
 								</div>
 							</div>
 							<div>

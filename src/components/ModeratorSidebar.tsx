@@ -6,6 +6,7 @@ import { UilEstate } from '@iconscout/react-unicons'
 import { UilUsersAlt } from '@iconscout/react-unicons'
 import { UilBooks } from '@iconscout/react-unicons'
 import { UilBookAlt } from '@iconscout/react-unicons'
+import { Link } from 'react-router-dom'
 
 const ModeratorSidebar = () => {
 	return (
@@ -26,10 +27,18 @@ const ModeratorSidebar = () => {
 				<div className='font-bold text-base'>catto</div>
 			</div>
 			<div>
-				<ModeratorSidebarButton icon={<UilEstate />} text='Overview' />
-				<ModeratorSidebarButton icon={<UilUsersAlt />} text='Users' />
-				<ModeratorSidebarButton icon={<UilBooks />} text='Genres' />
-				<ModeratorSidebarButton icon={<UilBookAlt />} text='Books' />
+				<Link to='/moderator/overview'>
+					<ModeratorSidebarButton icon={<UilEstate />} text='Overview' />
+				</Link>
+				<Link to='/moderator/users'>
+					<ModeratorSidebarButton icon={<UilUsersAlt />} text='Users' />
+				</Link>
+				<Link to='/moderator/genres'>
+					<ModeratorSidebarButton icon={<UilBooks />} text='Genres' />
+				</Link>
+				<Link to='/moderator/books'>
+					<ModeratorSidebarButton icon={<UilBookAlt />} text='Books' />
+				</Link>
 			</div>
 		</div>
 	)

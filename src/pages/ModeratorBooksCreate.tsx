@@ -14,40 +14,115 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import Button from '../components/Button'
 import FileInput from '../components/FileInput'
+import axios from 'axios'
 
 const ModeratorBooksCreate = () => {
 	const [searchBoxValue, setSearchBoxValue] = useState<string>('')
 	const [frontCover, setFrontCover] = useState<string | undefined>('')
+	const [frontCoverFile, setFrontCoverFile] = useState('')
+	const [uploadedFrontCover, setUploadedFrontCover] = useState('')
 	const [backCover, setBackCover] = useState<string | undefined>('')
+	const [backCoverFile, setBackCoverFile] = useState('')
+	const [uploadedBackCover, setUploadedBackCover] = useState('')
+
+	const url = 'http://168.63.247.4/v1'
+	const token =
+		'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjEwMDAwMDAwMDAiLCJpc3MiOiJodHRwczovL3d3dy5yZWFkYWJsZS5jZiIsImF1ZCI6Imh0dHBzOi8vd3d3LnJlYWRhYmxlLmNmIn0.8gWOkSBrFZ5vDPeNJChnCZQulCkrByso0tNp0wwidu8'
 
 	const handleSearchBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchBoxValue(e.target.value)
 	}
 
-	const handleChangeFrontCover = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const reader = new FileReader()
-
-		reader.onload = () => {
-			if (reader.readyState === 2) {
-				setFrontCover(reader.result as string)
-			}
-		}
-		if (e.target.files) {
-			reader.readAsDataURL(e.target.files[0])
-		}
+	const handleChangeFrontCover = (e: any) => {
+		setFrontCover(URL.createObjectURL(e.target.files[0]))
+		setFrontCoverFile(e.target.files[0])
 	}
 
-	const handleChangeBackCover = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const reader = new FileReader()
+	const uploadFrontCover = () => {
+		const file = frontCoverFile
 
-		reader.onload = () => {
-			if (reader.readyState === 2) {
-				setBackCover(reader.result as string)
-			}
-		}
-		if (e.target.files) {
-			reader.readAsDataURL(e.target.files[0])
-		}
+		const formData = new FormData()
+
+		formData.append('image', file)
+
+		axios
+			.post(`${url}/moderators/books/cover`, formData, {
+				headers: {
+					'content-type': 'multipart/form-data',
+					Authorization: `Bearer ${token}`,
+				},
+			})
+			.then(res => {
+				setUploadedFrontCover(res.data)
+				console.log(res)
+			})
+			.catch(err => {
+				console.log(err)
+			})
+	}
+
+	const handleChangeBackCover = (e: any) => {
+		setBackCover(URL.createObjectURL(e.target.files[0]))
+		setBackCoverFile(e.target.files[0])
+	}
+
+	const uploadBackCover = () => {
+		const file = backCoverFile
+
+		const formData = new FormData()
+
+		formData.append('image', file)
+
+		axios
+			.post(`${url}/moderators/books/cover`, formData, {
+				headers: {
+					'content-type': 'multipart/form-data',
+					Authorization: `Bearer ${token}`,
+				},
+			})
+			.then(res => {
+				setUploadedBackCover(res.data)
+				console.log(res)
+			})
+			.catch(err => {
+				console.log(err)
+			})
+	}
+
+	const createBook = () => {
+		axios
+			.post(
+				`${url}/moderators/books`,
+				{
+					name: formik.values.name,
+					description: formik.values.description,
+					frontCover: uploadedFrontCover,
+					backCover: uploadedBackCover,
+					genres: [1000, 1001],
+					author: formik.values.author,
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			)
+			.then(res => {
+				console.log(res)
+			})
+			.catch(err => {
+				console.log(err)
+			})
+	}
+
+	const handleFormSubmit = (e: any) => {
+		e.preventDefault()
+
+		uploadFrontCover()
+
+		uploadBackCover()
+
+		createBook()
 	}
 
 	const formik = useFormik({
@@ -152,20 +227,20 @@ const ModeratorBooksCreate = () => {
 									<div className='w-full'>
 										<FileInput
 											text='Upload Front Cover'
-											id='back-cover'
+											id='front-cover'
 											onChange={handleChangeFrontCover}
 										/>
 									</div>
 									<div className='w-full'>
 										<FileInput
 											text='Upload Back Cover'
-											id='front-cover'
+											id='back-cover'
 											onChange={handleChangeBackCover}
 										/>
 									</div>
 								</div>
 								<div className='mt-5 flex justify-end'>
-									<Button text='Upload' />
+									<Button text='Upload' onClick={handleFormSubmit} />
 								</div>
 							</form>
 						</div>
@@ -175,7 +250,14 @@ const ModeratorBooksCreate = () => {
 								<div
 									style={{ width: '200px', height: '300px' }}
 									className='border border-black mt-5'>
-									<img src={frontCover} className='w-full h-full bg-cover' />
+									{frontCover != '' ? (
+										<img
+											src={frontCover}
+											className='w-full h-full object-cover'
+										/>
+									) : (
+										''
+									)}
 								</div>
 							</div>
 							<div>
@@ -183,7 +265,14 @@ const ModeratorBooksCreate = () => {
 								<div
 									style={{ width: '200px', height: '300px' }}
 									className='border border-black mt-5'>
-									<img src={backCover} className='w-full h-full bg-cover' />
+									{backCover != '' ? (
+										<img
+											src={backCover}
+											className='w-full h-full object-cover'
+										/>
+									) : (
+										''
+									)}
 								</div>
 							</div>
 						</div>
