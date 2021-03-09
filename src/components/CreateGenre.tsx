@@ -2,7 +2,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import Input from './Input'
 import Button from './Button'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import axios from 'axios'
 
 const CreateGenre = () => {
@@ -14,25 +14,6 @@ const CreateGenre = () => {
 		'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjEwMDAwMDAwMDAiLCJpc3MiOiJodHRwczovL3d3dy5yZWFkYWJsZS5jZiIsImF1ZCI6Imh0dHBzOi8vd3d3LnJlYWRhYmxlLmNmIn0.8gWOkSBrFZ5vDPeNJChnCZQulCkrByso0tNp0wwidu8'
 
 	const url = 'http://168.63.247.4/v1'
-	// useEffect(() => {
-	// 	const getBook = async () => {
-	// 		const res = await axios.get(
-	// 			`http://168.63.247.4/v1/users/books/${bookId}`,
-	// 			{ headers: { Authorization: `Bearer ${token}` } }
-	// 		)
-	// 		setData(prevState => ({
-	// 			...prevState,
-	// 			id: res.data.data.id,
-	// 			author: res.data.data.author,
-	// 			description: res.data.data.description,
-	// 			frontCover: res.data.data.frontCover,
-	// 			name: res.data.data.name,
-	// 		}))
-	// 		setGenres(res.data.data.genres)
-	// 		console.log(res.data)
-	// 	}
-	// 	getBook()
-	// }, [])
 
 	const formik = useFormik({
 		initialValues: {

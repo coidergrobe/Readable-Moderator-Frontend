@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ModeratorLayout from '../layouts/ModeratorLayout'
 import SearchBox from '../components/SearchBox'
 import Input from '../components/Input'
@@ -13,37 +13,48 @@ import { UilEllipsisV } from '@iconscout/react-unicons'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import Button from '../components/Button'
-import FileInput from '../components/FileInput'
 import axios from 'axios'
 
 const ModeratorBooksCreate = () => {
 	const [searchBoxValue, setSearchBoxValue] = useState<string>('')
-	const [frontCover, setFrontCover] = useState<string | undefined>('')
+	const [frontCover, setFrontCover] = useState('')
 	const [frontCoverFile, setFrontCoverFile] = useState('')
 	const [uploadedFrontCover, setUploadedFrontCover] = useState('')
 	const [backCover, setBackCover] = useState<string | undefined>('')
-	const [backCoverFile, setBackCoverFile] = useState('')
+	const [backCoverFile, setBackCoverFile] = useState<any>('')
 	const [uploadedBackCover, setUploadedBackCover] = useState('')
+	const [allGenres, setAllGenres] = useState<any[]>([])
+	const [checkedGenres, setCheckedGenres] = useState<number[]>([])
 
 	const url = 'http://168.63.247.4/v1'
 	const token =
 		'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjEwMDAwMDAwMDAiLCJpc3MiOiJodHRwczovL3d3dy5yZWFkYWJsZS5jZiIsImF1ZCI6Imh0dHBzOi8vd3d3LnJlYWRhYmxlLmNmIn0.8gWOkSBrFZ5vDPeNJChnCZQulCkrByso0tNp0wwidu8'
+
+	useEffect(() => {
+		const getAllGenres = async () => {
+			const res = await axios.get(`${url}/moderators/Genres`, {
+				headers: { Authorization: `Bearer ${token}` },
+			})
+			setAllGenres(res.data.data)
+			console.log(res.data.data)
+		}
+		getAllGenres()
+	}, [])
 
 	const handleSearchBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchBoxValue(e.target.value)
 	}
 
 	const handleChangeFrontCover = (e: any) => {
-		setFrontCover(URL.createObjectURL(e.target.files[0]))
-		setFrontCoverFile(e.target.files[0])
+		const file = e.target.files[0]
+		setFrontCover(URL.createObjectURL(file))
+		setFrontCoverFile(file)
 	}
 
 	const uploadFrontCover = () => {
-		const file = frontCoverFile
-
 		const formData = new FormData()
 
-		formData.append('image', file)
+		formData.append('image', frontCoverFile)
 
 		axios
 			.post(`${url}/moderators/books/cover`, formData, {
@@ -57,7 +68,7 @@ const ModeratorBooksCreate = () => {
 				console.log(res)
 			})
 			.catch(err => {
-				console.log(err)
+				console.log(err.response)
 			})
 	}
 
@@ -67,11 +78,9 @@ const ModeratorBooksCreate = () => {
 	}
 
 	const uploadBackCover = () => {
-		const file = backCoverFile
-
 		const formData = new FormData()
 
-		formData.append('image', file)
+		formData.append('image', backCoverFile)
 
 		axios
 			.post(`${url}/moderators/books/cover`, formData, {
@@ -85,8 +94,16 @@ const ModeratorBooksCreate = () => {
 				console.log(res)
 			})
 			.catch(err => {
-				console.log(err)
+				console.log(err.response)
 			})
+	}
+
+	const handleUploadImage = (e: any) => {
+		e.preventDefault()
+
+		uploadFrontCover()
+
+		uploadBackCover()
 	}
 
 	const createBook = () => {
@@ -98,7 +115,7 @@ const ModeratorBooksCreate = () => {
 					description: formik.values.description,
 					frontCover: uploadedFrontCover,
 					backCover: uploadedBackCover,
-					genres: [1000, 1001],
+					genres: checkedGenres,
 					author: formik.values.author,
 				},
 				{
@@ -111,16 +128,25 @@ const ModeratorBooksCreate = () => {
 				console.log(res)
 			})
 			.catch(err => {
-				console.log(err)
+				console.log(err.response)
 			})
+	}
+
+	const handleCheckBoxChange = (e: any) => {
+		if (e.target.checked === false) {
+			const index = checkedGenres.indexOf(Number(e.target.id))
+			if (index > -1) {
+				checkedGenres.splice(index, 1)
+				console.log('checked: ', checkedGenres)
+			}
+		} else {
+			setCheckedGenres([...checkedGenres, Number(e.target.id)])
+			console.log(checkedGenres)
+		}
 	}
 
 	const handleFormSubmit = (e: any) => {
 		e.preventDefault()
-
-		uploadFrontCover()
-
-		uploadBackCover()
 
 		createBook()
 	}
@@ -140,15 +166,6 @@ const ModeratorBooksCreate = () => {
 			console.log(values)
 		},
 	})
-
-	const scrollData = []
-
-	for (let i = 0; i < 10; i++) {
-		scrollData.push({
-			id: `id${i}`,
-			text: `text${i}`,
-		})
-	}
 
 	return (
 		<ModeratorLayout>
@@ -212,66 +229,83 @@ const ModeratorBooksCreate = () => {
 								{formik.touched.author && formik.errors.author ? (
 									<div className='text-error'>{formik.errors.author}</div>
 								) : null}
-								<div className='mt-5'>
-									<Scrollbars style={{ width: '100%', height: '50px' }}>
-										<div className='flex gap-2 pt-2'>
-											{scrollData.map(data => (
-												<div key={data.id}>
-													<HorizontalCategory id={data.id} text={data.text} />
+								<div className='mt-3'>
+									<Scrollbars style={{ width: '100%', height: '60px' }}>
+										<div className='flex gap-2'>
+											{allGenres.map(genre => (
+												<div key={genre.id} className='mt-4'>
+													<HorizontalCategory
+														id={genre.id}
+														text={genre.name}
+														onChange={handleCheckBoxChange}
+													/>
 												</div>
 											))}
 										</div>
 									</Scrollbars>
 								</div>
-								<div className='flex justify-between items-center mt-5 gap-5'>
-									<div className='w-full'>
-										<FileInput
-											text='Upload Front Cover'
-											id='front-cover'
-											onChange={handleChangeFrontCover}
-										/>
+								<div className='mt-5 flex justify-between'>
+									<div>
+										<Button text='Upload Image' onClick={handleUploadImage} />
 									</div>
-									<div className='w-full'>
-										<FileInput
-											text='Upload Back Cover'
-											id='back-cover'
-											onChange={handleChangeBackCover}
-										/>
+									<div>
+										<Button text='Create' onClick={handleFormSubmit} />
 									</div>
-								</div>
-								<div className='mt-5 flex justify-end'>
-									<Button text='Upload' onClick={handleFormSubmit} />
 								</div>
 							</form>
+							<input
+								type='file'
+								id='front-cover'
+								hidden
+								onChange={handleChangeFrontCover}
+							/>
+							<input
+								type='file'
+								id='back-cover'
+								hidden
+								onChange={handleChangeBackCover}
+							/>
 						</div>
 						<div className='flex gap-5'>
 							<div>
-								<h1>Front Cover</h1>
 								<div
 									style={{ width: '200px', height: '300px' }}
 									className='border border-black mt-5'>
 									{frontCover != '' ? (
 										<img
 											src={frontCover}
-											className='w-full h-full object-cover'
+											className='w-full h-full object-cover cursor-pointer'
+											onClick={() => {
+												setFrontCover('')
+											}}
 										/>
 									) : (
-										''
+										<label htmlFor='front-cover'>
+											<div className='w-full h-full bg-neutral-light flex justify-center items-center cursor-pointer'>
+												Select front cover
+											</div>
+										</label>
 									)}
 								</div>
 							</div>
 							<div>
-								<h1>Back Cover</h1>
 								<div
 									style={{ width: '200px', height: '300px' }}
 									className='border border-black mt-5'>
 									{backCover != '' ? (
 										<img
 											src={backCover}
-											className='w-full h-full object-cover'
+											className='w-full h-full object-cover cursor-pointer'
+											onClick={() => {
+												setBackCover('')
+											}}
 										/>
 									) : (
-										''
+										<label htmlFor='back-cover'>
+											<div className='w-full h-full bg-neutral-light flex justify-center items-center cursor-pointer'>
+												Select back cover
+											</div>
+										</label>
 									)}
 								</div>
 							</div>
