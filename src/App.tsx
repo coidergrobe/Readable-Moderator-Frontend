@@ -7,63 +7,45 @@ import _ from 'lodash'
 import AppRoute from './AppRoute'
 import { appAction } from './actions'
 // Import pages lazily to reduce bundle size
-const About = lazy(() => import('./pages/About'))
-const HelloWorld = lazy(() => import('./pages/HelloWorld'))
-const Home = lazy(() => import('./pages/Home'))
 const Login = lazy(() => import('./pages/Login'))
-const Register = lazy(() => import('./pages/Register'))
 const Overview = lazy(() => import('./pages/Overview'))
 const ModeratorUsers = lazy(() => import('./pages/ModeratorUsers'))
 const ModeratorGenres = lazy(() => import('./pages/ModeratorGenres'))
 const ModeratorBooks = lazy(() => import('./pages/ModeratorBooks'))
+const ModeratorBooksCreate = lazy(() => import('./pages/ModeratorBooksCreate'))
 
 const routes = [
 	{
-		path: '/about',
-		component: About,
-		extract: true,
-	},
-	{
-		path: '/hello-world',
-		component: HelloWorld,
-		extract: true,
-	},
-	{
 		path: '/login',
 		component: Login,
-		extract: true,
+		exact: true,
 		auth: false,
 	},
-	{
-		path: '/register',
-		component: Register,
-		extract: true,
-		auth: false,
-	},
+
 	{
 		path: '/moderator/overview',
 		component: Overview,
-		extract: true,
+		exact: true,
 	},
 	{
 		path: '/moderator/users',
 		component: ModeratorUsers,
-		extract: true,
+		exact: true,
 	},
 	{
 		path: '/moderator/genres',
 		component: ModeratorGenres,
-		extract: true,
+		exact: true,
 	},
 	{
 		path: '/moderator/books',
 		component: ModeratorBooks,
-		extract: true,
+		exact: true,
 	},
 	{
-		path: '/',
-		component: Home,
-		extract: true,
+		path: '/moderator/books/create',
+		component: ModeratorBooksCreate,
+		exact: true,
 	},
 ]
 

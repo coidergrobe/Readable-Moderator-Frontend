@@ -1,14 +1,9 @@
 import Pagination from './Pagination'
 import Table from './Table'
-
-interface Tbody {
-	data: any[]
-	value: any[]
-}
-
 interface Props {
 	thead: string[]
-	tbody: Tbody
+	tbodyKey: string[]
+	tbodyData: any[]
 	text: string
 	button: boolean
 	postsPerPage: number
@@ -23,7 +18,8 @@ interface Props {
 
 const PaginationTable: React.FC<Props> = ({
 	thead,
-	tbody,
+	tbodyKey,
+	tbodyData,
 	text,
 	button,
 	postsPerPage,
@@ -35,7 +31,13 @@ const PaginationTable: React.FC<Props> = ({
 }) => {
 	return (
 		<div>
-			<Table thead={thead} tbody={tbody} text={text} button={button} />
+			<Table
+				thead={thead}
+				tbodyKey={tbodyKey}
+				tbodyData={tbodyData}
+				text={text}
+				button={button}
+			/>
 			<Pagination
 				postsPerPage={postsPerPage}
 				totalPosts={totalPosts}

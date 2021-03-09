@@ -1,51 +1,52 @@
 import Button from './Button'
 
-interface Tbody {
-	data: any[]
-	value: any[]
-}
-
 interface Props {
 	thead: string[]
-	tbody: Tbody
+	tbodyKey: string[]
+	tbodyData: any[]
 	text?: string
 	button?: boolean
 }
 
-const Table: React.FC<Props> = ({ thead, tbody, text, button }) => {
+const Table: React.FC<Props> = ({
+	thead,
+	tbodyKey,
+	tbodyData,
+	text,
+	button,
+}) => {
+	const theadArr = []
+
+	for (let i = 0; i < thead.length; i++) {
+		theadArr.push(<th className='py-5 pl-10 text-left'>{thead[i]}</th>)
+	}
+
 	return (
 		<>
 			<table className='rounded-ttb bg-white box-border w-full mb-5'>
 				<thead style={{ backgroundColor: '#f5f5f5' }}>
-					<tr id='table-rounded'>
-						{thead.map(th => (
-							<th className='py-5 pl-10 text-left' key={th}>
-								{th}
-							</th>
-						))}
-					</tr>
+					<tr id='table-rounded'>{theadArr}</tr>
 				</thead>
-
 				<tbody>
-					{tbody.data.map(t => {
+					{tbodyData.map(tbd => {
 						return (
-							<tr key={t[tbody.value[0]]}>
-								<td className='py-5 px-5 border-t' style={{ width: '30%' }}>
-									{t[tbody.value[0]]}
-								</td>
-								<td className='py-5 px-5 border-t' style={{ width: '30%' }}>
-									{t[tbody.value[1]]}
-								</td>
-								<td className='py-5 px-5 border-t' style={{ width: '30%' }}>
-									{t[tbody.value[2]]}
-								</td>
+							<tr key={tbd.id}>
+								{tbodyKey.map(tbkey => {
+									return (
+										<td
+											className='py-5 px-5 border-t first:w-15p'
+											key={tbd.id}
+											style={{ width: `calc(100% / ${thead.length})` }}>
+											{tbd[tbkey]}
+										</td>
+									)
+								})}
 								{button ? (
-									<td className='py-5 px-5 border-t' style={{ width: '10%' }}>
+									<td className='py-5 px-5 border-t text-center'>
 										<Button
-											text={text}
 											primary
-											className='rounded-full'
-											style={{ padding: '0.75rem 1.75rem' }}
+											text={text}
+											className='rounded-full px-5 text-sm'
 										/>
 									</td>
 								) : (

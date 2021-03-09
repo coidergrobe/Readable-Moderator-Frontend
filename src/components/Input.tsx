@@ -33,11 +33,11 @@ const Input: React.FC<Props> = ({
 				className={
 					value === ''
 						? classnames(
-								'w-full border border-transparent bg-neutral-quaternary-alt focus:outline-none focus:border-primary focus:border-transparent focus:bg-white my-2 rounded-md py-xs px-2 active:bg-neutral-quaternary-alt',
+								'w-full border-2 border-transparent bg-neutral-quaternary-alt focus:outline-none focus:border-neutral-dark focus:border-transparent focus:bg-white my-2 rounded-md py-xs px-2 active:bg-neutral-quaternary-alt',
 								className
 						  )
 						: classnames(
-								'w-full border border-primary bg-white focus:outline-none focus:border-primary focus:border-transparent focus:bg-white my-2 rounded-md py-xs px-2 active:bg-white',
+								'w-full border-2 border-neutral-dark bg-white focus:outline-none focus:border-neutral-dark focus:border-transparent focus:bg-white my-2 rounded-md py-xs px-2 active:bg-white',
 								className
 						  )
 				}
