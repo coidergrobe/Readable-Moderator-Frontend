@@ -4,6 +4,7 @@ import SearchBox from '../components/SearchBox'
 import Input from '../components/Input'
 import HorizontalCategory from '../components/HorizontalCategory'
 import { Scrollbars } from 'react-custom-scrollbars'
+import { Document, Page } from 'react-pdf/dist/esm/entry.webpack'
 
 // Icons
 import { UilBell } from '@iconscout/react-unicons'
@@ -15,6 +16,12 @@ import * as Yup from 'yup'
 import Button from '../components/Button'
 import axios from 'axios'
 
+// pdf configs
+const options = {
+	cMapUrl: 'cmaps/',
+	cMapPacked: true,
+}
+
 const ModeratorBooksCreate = () => {
 	const [searchBoxValue, setSearchBoxValue] = useState<string>('')
 	const [frontCover, setFrontCover] = useState('')
@@ -25,6 +32,8 @@ const ModeratorBooksCreate = () => {
 	const [uploadedBackCover, setUploadedBackCover] = useState('')
 	const [allGenres, setAllGenres] = useState<any[]>([])
 	const [checkedGenres, setCheckedGenres] = useState<number[]>([])
+	const [bookId, setBookId] = useState(0)
+	const [pdfFile, setPDFFile] = useState('')
 
 	const url = 'http://168.63.247.4/v1'
 	const token =
@@ -125,7 +134,8 @@ const ModeratorBooksCreate = () => {
 				}
 			)
 			.then(res => {
-				console.log(res)
+				setBookId(res.data.data.id)
+				console.log(res.data.data.id)
 			})
 			.catch(err => {
 				console.log(err.response)
@@ -149,6 +159,27 @@ const ModeratorBooksCreate = () => {
 		e.preventDefault()
 
 		createBook()
+	}
+
+	const handleChangePdfFile = (e: any) => {
+		setPDFFile(e.target.files[0])
+	}
+
+	const handleAddPage = () => {
+		const formData = new FormData()
+
+		formData.append('content', pdfFile)
+
+		axios
+			.post(`${url}/moderators/books/${bookId}/pages`, formData, {
+				headers: { Authorization: `Bearer ${token}` },
+			})
+			.then(res => {
+				console.log(res)
+			})
+			.catch(err => {
+				console.log(err)
+			})
 	}
 
 	const formik = useFormik({
@@ -188,7 +219,7 @@ const ModeratorBooksCreate = () => {
 						</div>
 					</div>
 				</div>
-				<div className='text-4xl font-bold my-10'>Create Book</div>
+				<div className='text-4xl font-bold my-10'>Create Book Information</div>
 				<div className='bg-white box-border p-5 rounded-ttb'>
 					<div className='flex justify-evenly'>
 						<div className='w-sbp h-full'>
@@ -246,10 +277,18 @@ const ModeratorBooksCreate = () => {
 								</div>
 								<div className='mt-5 flex justify-between'>
 									<div>
-										<Button text='Upload Image' onClick={handleUploadImage} />
+										<span
+											className='font-bold text-xs px-3 py-sm rounded-md outline-none border-2 focus:bg-neutral-light focus:outline-none cursor-pointer border-neutral-dark'
+											onClick={handleUploadImage}>
+											Upload Image
+										</span>
 									</div>
 									<div>
-										<Button text='Create' onClick={handleFormSubmit} />
+										<span
+											className='font-bold text-xs px-3 py-sm rounded-md outline-none border-2 focus:bg-neutral-light focus:outline-none cursor-pointer border-neutral-dark'
+											onClick={handleFormSubmit}>
+											Create
+										</span>
 									</div>
 								</div>
 							</form>
@@ -310,6 +349,44 @@ const ModeratorBooksCreate = () => {
 								</div>
 							</div>
 						</div>
+					</div>
+				</div>
+				<div className='text-4xl font-bold my-10'>Add Pages</div>
+
+				<div className='bg-white box-border p-5 rounded-ttb'>
+					<div className='flex justify-center gap-5'>
+						<input
+							type='file'
+							id='pdf-file'
+							hidden
+							onChange={handleChangePdfFile}
+						/>
+						<label htmlFor='pdf-file'>
+							<div>
+								<span className='font-bold text-xs px-3 py-sm rounded-md outline-none border-2 focus:bg-neutral-light focus:outline-none cursor-pointer border-neutral-dark'>
+									Select Page
+								</span>
+							</div>
+						</label>
+						<div>
+							<span
+								className='font-bold text-xs px-3 py-sm rounded-md outline-none border-2 focus:bg-neutral-light focus:outline-none cursor-pointer border-neutral-dark'
+								onClick={handleAddPage}>
+								Add Page
+							</span>
+						</div>
+					</div>
+					<h1 className='flex justify-center text-base font-bold mt-5'>
+						Preview
+					</h1>
+					<div className='h-full flex justify-center mt-5'>
+						{pdfFile != '' ? (
+							<Document file={pdfFile} options={options}>
+								<Page pageNumber={1} />
+							</Document>
+						) : (
+							''
+						)}
 					</div>
 				</div>
 			</div>

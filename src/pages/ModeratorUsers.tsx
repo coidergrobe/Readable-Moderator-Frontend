@@ -15,6 +15,11 @@ const ModeratorUsers = () => {
 	const [posts, setPosts] = useState([])
 	const [currentPage, setCurrentPage] = useState(1)
 	const [postsPerPage] = useState(5)
+	const [totalUsers, setTotalUsers] = useState(0)
+
+	const url = 'http://168.63.247.4/v1'
+	const token =
+		'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjEwMDAwMDAwMDAiLCJpc3MiOiJodHRwczovL3d3dy5yZWFkYWJsZS5jZiIsImF1ZCI6Imh0dHBzOi8vd3d3LnJlYWRhYmxlLmNmIn0.8gWOkSBrFZ5vDPeNJChnCZQulCkrByso0tNp0wwidu8'
 
 	useEffect(() => {
 		const fetchPosts = async () => {
@@ -23,6 +28,17 @@ const ModeratorUsers = () => {
 		}
 
 		fetchPosts()
+	}, [])
+
+	useEffect(() => {
+		const fetchTotalUsers = async () => {
+			const res = await axios.get(`${url}/moderators/User/CountUser`, {
+				headers: { Authorization: `Bearer ${token}` },
+			})
+			setTotalUsers(res.data.data.total)
+		}
+
+		fetchTotalUsers()
 	}, [])
 
 	const handleSearchBoxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,12 +90,12 @@ const ModeratorUsers = () => {
 					<div className='grid grid-cols-4 gap-6 pb-6'>
 						<TotalData
 							icon={<UilUser />}
-							totalNumber='400'
+							totalNumber={totalUsers}
 							text='Total users'
 						/>
 						<TotalData
 							icon={<UilUser />}
-							totalNumber='400'
+							totalNumber='4'
 							text='Total premium'
 						/>
 					</div>
