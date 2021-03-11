@@ -24,8 +24,8 @@ const login = (user: any) => {
 	return baseService.request.post('/v1/users/Auth/login', user)
 }
 
-const loadUser = (token: string) => {
-	return Promise.resolve()
+const loadUser = () => {
+	return baseService.request.get('/v1/users/auth/me')
 }
 
 export default {

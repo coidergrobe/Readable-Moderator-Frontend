@@ -46,7 +46,7 @@ const Table: React.FC<Props> = ({
 										<Button
 											primary
 											text={text}
-											className='rounded-full px-5 text-sm'
+											className='rounded-full px-5 text-sm select-none'
 										/>
 									</td>
 								) : (
